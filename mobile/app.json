@@ -21,13 +21,19 @@
         "backgroundColor": "#000000"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.winner55.blacksank"
     },
     "web": {
       "favicon": "./assets/logo.png"
     },
     "plugins": [
       "expo-secure-store"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "2b1ab83e-2b20-40a8-8835-da5fd2bf4126"
+      }
+    }
   }
 }
