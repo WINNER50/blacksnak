@@ -1,0 +1,27 @@
+{
+  "name": "blacksnack-fullstack",
+  "version": "1.0.0",
+  "description": "Application de jeu Snake avec système de tournois et défis - Architecture Full-Stack",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install --prefix backend && echo '\n✅ Backend installé\n'",
+    "dev:backend": "cd backend && npm run dev",
+    "start:backend": "cd backend && npm start",
+    "test:backend": "cd backend && node test-api.js",
+    "setup": "bash init.sh"
+  },
+  "keywords": [
+    "blacksnack",
+    "snake-game",
+    "fullstack",
+    "nodejs",
+    "express",
+    "postgresql",
+    "react"
+  ],
+  "author": "",
+  "license": "MIT",
+  "workspaces": [
+    "backend"
+  ]
+}
