@@ -35,10 +35,20 @@ export default function App() {
           apiService.getProfile().then((profile) => {
             setUser(profile);
             setIsAuthenticated(true);
-          }).catch(() => {
-            SecureStore.deleteItemAsync(config.TOKEN_KEY);
-            SecureStore.deleteItemAsync(config.REFRESH_TOKEN_KEY);
-            setIsAuthenticated(false);
+          }).catch((error) => {
+            if (error.status === 401) {
+              // Token invalide ou expiré définitivement
+              SecureStore.deleteItemAsync(config.TOKEN_KEY);
+              SecureStore.deleteItemAsync(config.REFRESH_TOKEN_KEY);
+              setIsAuthenticated(false);
+            } else if (error.isNetworkError) {
+              // Problème d'internet : on garde l'authentification locale
+              // Le profil a peut-être été chargé depuis le cache par ApiService.getProfile()
+              setIsAuthenticated(true);
+            } else {
+              // Erreur serveur ou autre : on reste connecté par défaut
+              setIsAuthenticated(true);
+            }
           }).finally(() => {
             setIsChecking(false);
           });

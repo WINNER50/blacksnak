@@ -68,7 +68,11 @@ api.interceptors.response.use(
       originalMessage: error.response?.data?.error || error.message
     });
 
-    return Promise.reject(new Error(message));
+    const finalError: any = new Error(message);
+    finalError.status = error.response?.status;
+    finalError.isNetworkError = !error.response;
+
+    return Promise.reject(finalError);
   }
 );
 
@@ -81,6 +85,9 @@ class ApiService {
     if (data.refreshToken) {
       await SecureStore.setItemAsync(config.REFRESH_TOKEN_KEY, data.refreshToken);
     }
+    if (data.user) {
+      await SecureStore.setItemAsync(config.USER_KEY, JSON.stringify(data.user));
+    }
     return data;
   }
 
@@ -91,6 +98,9 @@ class ApiService {
     }
     if (data.refreshToken) {
       await SecureStore.setItemAsync(config.REFRESH_TOKEN_KEY, data.refreshToken);
+    }
+    if (data.user) {
+      await SecureStore.setItemAsync(config.USER_KEY, JSON.stringify(data.user));
     }
     return data;
   }
@@ -110,10 +120,24 @@ class ApiService {
   async logout(): Promise<void> {
     await SecureStore.deleteItemAsync(config.TOKEN_KEY);
     await SecureStore.deleteItemAsync(config.REFRESH_TOKEN_KEY);
+    await SecureStore.deleteItemAsync(config.USER_KEY);
   }
 
   async getProfile(): Promise<any> {
-    return await api.get('/users/me');
+    try {
+      const profile = await api.get('/users/me');
+      if (profile) {
+        await SecureStore.setItemAsync(config.USER_KEY, JSON.stringify(profile));
+      }
+      return profile;
+    } catch (error) {
+      // Si erreur, on essaie de charger le profil local
+      const cached = await SecureStore.getItemAsync(config.USER_KEY);
+      if (cached) {
+        return JSON.parse(cached);
+      }
+      throw error;
+    }
   }
 
   async getPaymentMethods(): Promise<any> {

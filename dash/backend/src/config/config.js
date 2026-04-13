@@ -11,24 +11,30 @@ module.exports = {
 
   // Database
   db: {
-    host: process.env.DB_HOST || 'mysql-winner55.alwaysdata.net',
-    user: process.env.DB_USER || 'winner55',
-    password: process.env.DB_PASSWORD || 'SUPERface22',
-    database: process.env.DB_NAME || 'winner55_snak',
-    connectionLimit: 10,
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    connectionLimit: process.env.DB_CONNECTION_LIMIT ? parseInt(process.env.DB_CONNECTION_LIMIT) : 10,
   },
-
 
   // JWT
   jwt: {
-    secret: process.env.JWT_SECRET || 'your_super_secret_key_change_in_production',
+    secret: process.env.JWT_SECRET || 'fallback_secret_for_dev_only',
     expiresIn: process.env.JWT_EXPIRES_IN || '7d',
   },
 
   // CORS
   cors: {
-    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+    origin: process.env.CORS_ORIGIN || '*', // Allow all by default or specify for security
     credentials: true,
+  },
+
+  // Cloudinary
+  cloudinary: {
+    cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+    apiKey: process.env.CLOUDINARY_API_KEY,
+    apiSecret: process.env.CLOUDINARY_API_SECRET,
   },
 
   // Pagination
